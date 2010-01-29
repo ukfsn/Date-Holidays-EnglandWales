@@ -1,16 +1,17 @@
 package Date::Holidays::EnglandWales;
 
-use 5.010000;
+use 5.008000;
 use strict;
 use warnings;
 
 use Time::Piece;
+use Time::Seconds;
 use DateTime::Event::Easter;
 
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw( is_holiday is_uk_holiday );
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 NAME
@@ -89,8 +90,6 @@ sub is_uk_holiday {
         $date = sprintf "%s-%s-%s", $date, $MON, $DAY;
     }
 
-    print $date . "\n";
-
     my $d = Time::Piece->strptime($date, "%F");
 
     if ( $d->mon == 1 ) {
@@ -134,16 +133,17 @@ sub is_uk_holiday {
         return undef;
     }
 
-    # I'm cheating here as the DateTime::Event::Easter module gets the day wrong by -1
-    return "Easter Monday" if &_Easter($d->year, $d->mon, $d->mday);
-    return "Good Friday" if &_GoodFriday($d->year, $d->mon, $d->mday+1);
+    my $e = $d;
+    $e -= ONE_DAY;  # we need to check to see whether the day BEFORE the current one is Easter Sunday
+    return "Easter Monday" if &_Easter($e->year, $e->mon, $e->mday);
+    return "Good Friday" if &_GoodFriday($d->year, $d->mon, $d->mday);
 
 }
 
 sub _Easter {
     my ($year, $month, $day) = @_;
 
-    my $dt = DateTime->new( year => $year, month => $month, day => $day-1 );
+    my $dt = DateTime->new( year => $year, month => $month, day => $day );
     my $easter_sunday = DateTime::Event::Easter->new();
 
     return $easter_sunday->is($dt);
@@ -152,7 +152,7 @@ sub _Easter {
 sub _GoodFriday {
     my ($year, $month, $day) = @_;
 
-    my $dt = DateTime->new( year => $year, month => $month, day => $day-1 );
+    my $dt = DateTime->new( year => $year, month => $month, day => $day );
     my $good_friday = DateTime::Event::Easter->new(day=>'Good Friday');
 
     return $good_friday->is($dt);

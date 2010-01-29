@@ -1,5 +1,10 @@
 Revision history for Perl extension Date::Holidays::EnglandWales.
 
+0.01  Fri Jan 29 09:59:00 2010
+    - Doesn't require perl 5.10 - set it to 5.8 which should be enough.
+    - Correct bug in Easter functions
+    - Remove print statement
+
 0.01  Thu Jan 28 17:48:21 2010
 	- initial release
 
