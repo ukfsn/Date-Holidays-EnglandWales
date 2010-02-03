@@ -1,6 +1,20 @@
 Revision history for Perl extension Date::Holidays::EnglandWales.
 
-0.01  Fri Jan 29 09:59:00 2010
+0.05  Mon Feb  1 14:45:00 2010
+    - If the 27th Dec is either Mon or Tue it means Christmas Day was 
+      Saturday or Sunday so both Mon and Tue are bank holidays
+        Thanks again to Lee Johnson for his eagle eye :)
+      This also means the Chrismas Day bank holiday can be on 26th.
+
+0.04  Mon Feb  1 12:20:00 2010
+    - Boxing Day holiday can be either Mon or Tue if it's the 28th.
+
+0.03  Mon Feb  1 12:10:00 2010
+    - Boxing Day holiday moves to Tue is Christmas Day is Saturday or Sunday.
+        Thanks for Lee Johnson for catching this one
+    - Corrected dependency to include Time::Seconds
+
+0.02  Fri Jan 29 09:59:00 2010
     - Doesn't require perl 5.10 - set it to 5.8 which should be enough.
     - Correct bug in Easter functions
     - Remove print statement

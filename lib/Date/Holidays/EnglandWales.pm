@@ -11,7 +11,7 @@ use DateTime::Event::Easter;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw( is_holiday is_uk_holiday );
-our $VERSION = '0.02';
+our $VERSION = '0.05';
 
 
 =head1 NAME
@@ -124,11 +124,13 @@ sub is_uk_holiday {
     if ( $d->mon == 12 ) {
         return "Christmas Day Bank Holiday" if (
             ( $d->mday == 25 && $d->day =~ /(Mon|Tue|Wed|Thu|Fri)/ ) ||
+            ( $d->mday == 26 && $d->day eq "Mon" ) ||
             ( $d->mday == 27 && $d->day eq "Mon" ) );
 
         return "Boxing Day" if (
             ( $d->mday == 26 && $d->day =~ /(Mon|Tue|Wed|Thu|Fri)/ ) ||
-            ( $d->mday == 28 && $d->day eq "Mon" ) );
+            ( $d->mday == 27 && $d->day =~ /(Mon|Tue)/ ) ||
+            ( $d->mday == 28 && $d->day =~ /(Mon|Tue)/ ) );
 
         return undef;
     }

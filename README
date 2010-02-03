@@ -1,5 +1,5 @@
-Date-Holidays-EnglandWales version 0.01
-=======================================
+Date-Holidays-EnglandWales version 
+==================================
 
 This module can be used to determine whether a given date is a bank 
 holiday in England and Wales. 
@@ -21,6 +21,7 @@ DEPENDENCIES
 This module requires these other modules and libraries:
 
   Time::Piece
+  Time::Seconds
   DateTime::Event::Easter
 
 COPYRIGHT AND LICENCE
