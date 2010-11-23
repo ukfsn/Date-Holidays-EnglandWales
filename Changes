@@ -1,5 +1,9 @@
 Revision history for Perl extension Date::Holidays::EnglandWales.
 
+0.06  Tue Nov 23 15:22:00 2010
+    - Add 29 April 2011 Bank Holiday for Wedding of Prince William 
+        and Kate Middleton
+
 0.05  Mon Feb  1 14:45:00 2010
     - If the 27th Dec is either Mon or Tue it means Christmas Day was 
       Saturday or Sunday so both Mon and Tue are bank holidays

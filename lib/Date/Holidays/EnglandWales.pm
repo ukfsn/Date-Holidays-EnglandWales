@@ -11,7 +11,7 @@ use DateTime::Event::Easter;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw( is_holiday is_uk_holiday );
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 
 =head1 NAME
@@ -100,6 +100,10 @@ sub is_uk_holiday {
         return undef;
     }
 
+    if ( $d->year == 2011 && $d->mon == 4 ) {
+        return "Wedding of Prince William and Kate Middleton" if $d->mday == 29;
+    }
+    
     if ( $d->mon == 5 ) {
         return "Early May Bank Holiday" if (
             ( $d->mday >= 1 && $d->mday <= 7 && $d->day eq "Mon" ) );
