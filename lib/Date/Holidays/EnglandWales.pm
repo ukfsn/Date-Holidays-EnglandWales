@@ -4,8 +4,7 @@ use 5.008000;
 use strict;
 use warnings;
 
-use Time::Piece;
-use Time::Seconds;
+use DateTime;
 use DateTime::Event::Easter;
 
 require Exporter;
@@ -84,65 +83,65 @@ License or the GNU GPL version 2 or later.
 sub is_holiday { goto &is_uk_holiday; }
 
 sub is_uk_holiday {
-    my ($date, $MON, $DAY) = @_;
+    my ($year, $month, $day) = @_;
+    ($year, $month, $day) = split m{[-/]}, $year unless $month;
+    
+    my $dt = DateTime->new(year => $year, month => $month, day => $day)
+        or die "Failed to create DateTime object for $year-$month-$day"
+            . " - invalid date?";
 
-    if ( $MON && $DAY ) {
-        $date = sprintf "%s-%s-%s", $date, $MON, $DAY;
-    }
-
-    my $d = Time::Piece->strptime($date, "%F");
-
-    if ( $d->mon == 1 ) {
+    if ( $month == 1 ) {
         return "New Years Day" if (
-            ( $d->mday == 1 && $d->day =~ /(Mon|Tue|Wed|Thu|Fri)/ ) || 
-            ( $d->mday == 2 && $d->day eq "Mon" ) ||
-            ( $d->mday == 3 && $d->day eq "Mon" ) );
+            ( $day == 1 && $dt->day_of_week <= 5 ) || 
+            ( $day == 2 && $dt->day_of_week == 1 ) ||
+            ( $day == 3 && $dt->day_of_week == 1 ) );
         return undef;
     }
 
-    if ( $d->year == 2011 && $d->mon == 4 ) {
-        return "Wedding of Prince William and Kate Middleton" if $d->mday == 29;
+    if ( $year == 2011 && $month == 4 ) {
+        return "Wedding of Prince William and Kate Middleton" if $day == 29;
     }
     
-    if ( $d->mon == 5 ) {
+    if ( $month == 5 ) {
         return "Early May Bank Holiday" if (
-            ( $d->mday >= 1 && $d->mday <= 7 && $d->day eq "Mon" ) );
+            ( $day >= 1 && $day <= 7 && $dt->day_of_week == 1 ) );
 
         return "Spring Bank Holiday" if (
-            $d->year != 2012 && 
-            ( $d->mday >= 25 && $d->day eq "Mon" ) );
+            $year != 2012 && 
+            ( $day >= 25 && $dt->day_of_week == 1 ) );
     }
 
-    if ( $d->year == 2012 && $d->mon == 6 ) {
-        return "Spring Bank Holiday" if $d->mday == 4;
-        return "Queen's Diamond Jubilee" if $d->mday == 5;  # Subject to Her Maj not dying first but I cannot be bothered to code for that.
+    if ( $year == 2012 && $month == 6 ) {
+        return "Spring Bank Holiday" if $day == 4;
+        return "Queen's Diamond Jubilee" if $day == 5;  # Subject to Her Maj not dying first but I cannot be bothered to code for that.
         return undef;
     }
 
-    if ( $d->mon == 8 ) {
+    if ( $month == 8 ) {
         return "Summer Bank Holiday" if (
-            $d->mday >= 25 && $d->day eq "Mon" );
+            $day >= 25 && $dt->day_of_week == 1 );
         return undef;
     }
 
-    if ( $d->mon == 12 ) {
+    if ( $month == 12 ) {
         return "Christmas Day Bank Holiday" if (
-            ( $d->mday == 25 && $d->day =~ /(Mon|Tue|Wed|Thu|Fri)/ ) ||
-            ( $d->mday == 26 && $d->day eq "Mon" ) ||
-            ( $d->mday == 27 && $d->day eq "Mon" ) );
+            ( $day == 25 && $dt->day_of_week <= 5 ) ||
+            ( $day == 26 && $dt->day_of_week == 1 ) ||
+            ( $day == 27 && $dt->day_of_week == 1 ) );
 
         return "Boxing Day" if (
-            ( $d->mday == 26 && $d->day =~ /(Mon|Tue|Wed|Thu|Fri)/ ) ||
-            ( $d->mday == 27 && $d->day =~ /(Mon|Tue)/ ) ||
-            ( $d->mday == 28 && $d->day =~ /(Mon|Tue)/ ) );
+            ( $day == 26 && $dt->day_of_week <= 5 ) ||
+            ( $day == 27 && $dt->day_of_week <= 2 ) ||
+            ( $day == 28 && $dt->day_of_week <= 2 ) );
 
         return undef;
     }
 
-    my $e = $d;
-    $e -= ONE_DAY;  # we need to check to see whether the day BEFORE the current one is Easter Sunday
-    return "Easter Monday" if &_Easter($e->year, $e->mon, $e->mday);
-    return "Good Friday" if &_GoodFriday($d->year, $d->mon, $d->mday);
+    return "Good Friday" if &_GoodFriday($year, $month, $day);
+
+    # We need to check if the day before the day in question is Easter Sunday
+    my $e = $dt->clone->subtract(days => 1);
+    return "Easter Monday" if &_Easter($e->year, $e->month, $e->day);
 
 }
 
