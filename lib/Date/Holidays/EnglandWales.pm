@@ -122,6 +122,10 @@ sub is_uk_holiday {
         return "Queen's Platinum Jubilee" if $day == 3; # She's still here
     }
 
+    if ( $year == 2022 && $month == 9 ) {
+	return "State Funeral of Queen Elizabeth II" if $day == 19; # May she rest in peace.
+    }
+
     if ( $month == 8 ) {
         return "Summer Bank Holiday" if (
             $day >= 25 && $dt->day_of_week == 1 );
