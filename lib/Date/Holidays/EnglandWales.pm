@@ -10,7 +10,7 @@ use DateTime::Event::Easter;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw( is_holiday is_uk_holiday );
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 
 =head1 NAME
